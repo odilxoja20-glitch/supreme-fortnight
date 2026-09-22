@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from datetime import datetime, timezone, timedelta
 from telegram import ReplyKeyboardMarkup, Update
@@ -5,7 +6,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandl
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 
-# 1. ВСТАВЬ СЮДА ТОКЕН ИЗ BOTFATHER
+# 1. ТОКЕН ТВОЕГО БОТА
 TOKEN = "8916979998:AAG6VILIUhL74xkDhUgJIyMC2mdTa8dU3bA"
 
 # Словарь для хранения выбранного класса пользователей: {user_id: "5-B" или "5-G"}
@@ -256,6 +257,13 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text(f"😴 Сейчас уроки для {selected_class} не идут (перемена или учебный день завершен).")
 
 def main():
+    # Фикс для корректной работы event loop на новых версиях Python (включая Python 3.14)
+    try:
+        asyncio.get_event_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
