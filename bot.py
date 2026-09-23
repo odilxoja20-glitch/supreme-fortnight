@@ -7,7 +7,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandl
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 
 # 1. ТОКЕН ТВОЕГО БОТА
-TOKEN = "8916979998:AAG6VILIUhL74xkDhUgJIyMC2mdTa8dU3bA"
+TOKEN = os.getenv("TOKEN")
 
 # Словарь для хранения выбранного класса пользователей: {user_id: "5-B" или "5-G"}
 user_classes = {}
